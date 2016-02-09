@@ -16,19 +16,16 @@ that, given two arrays A and B consisting of N integers each, returns the minimu
 
 I immediately started thinking about using objects representing straight lines in my solution, as well as their intersections.
 
-What my final solution does is finds the maximum and minimum "routes" separately (by route I mean the order of lines you take from 
-left to right, and the x-values of their intersections).  If you then cut this pair of lines into horizontal slices, where each slice is 
-on an intersection for the maximal or minimal route, then the minimum "gap" at each slice will be at one of the two slice borders.
-This is because both lines will be straight and unkinked within each slice.
+What my final solution does is finds the maximum and minimum routes separately (by route I mean the order of lines (or F(X,K))
+you take from left to right, and the x-values of their intersections).  If you then cut this pair of routes into horizontal slices, 
+where each slice is on an intersection for the maximal or minimal route, then the minimum "gap" (or value of S(X)) within each slice will be at one of the two slice borders.  This works because both routes will be straight and unkinked within each slice.  So my code simply crawls through each slice and finds the minimum overall gap this way, between the two routes D(X) and U(X).  
 
 I could only find the minimal and maximal routes in O(N^2) time, which means my solution is O(N^2).  Although all lines were ordered by 
-gradient (which Java's array library can sort in O(nlogn) time) to find the next part of each route you had to check the intersection of 
-every steeper curve.
+gradient (which Java's array library can sort in O(nlogn) time) to find the next part of each route my code had to check the intersection of every steeper curve.
 
-One of the difficulties I had was with parallel lines.  I got around this by sorting the lines by gradient, and THEN by REVERSE y-intercept.
-Then my code would always use the curve with the highest intercept (for finding the maximum route) and vice versa.
+One of the difficulties I had was with parallel lines.  I got around this by sorting the lines by gradient (increasing for max-route, decreasing for min-route), and then by REVERSE order y-intercept, for lines that were parallel. Then my code would always use the line with the highest intercept (for finding the maximum route) and vice versa, and ignore the other parallel lines.
 
-It's an old challenge so I am looking for solutions that have O(n^2), but I'm pleased with my solution. 
+It's an old challenge so I am looking for solutions that have below O(n^2) time, but I'm pleased with my solution. 
 
 I've included some examples in my code that are hardcoded into the main method, but feel free to fire in more weird datasets.  
 My code doesn't work if every line is parallel, or you only use one line, as I considered these cases too trivial.
