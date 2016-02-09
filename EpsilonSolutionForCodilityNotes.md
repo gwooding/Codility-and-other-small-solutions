@@ -17,7 +17,7 @@ that, given two arrays A and B consisting of N integers each, returns the minimu
 I immediately started thinking about using objects representing straight lines in my solution, as well as their intersections.
 
 What my final solution does is finds the maximum and minimum routes separately (by route I mean the order of lines (or F(X,K))
-you take from left to right, and the x-values of their intersections).  If you then cut this pair of routes into horizontal slices, 
+you take from left to right, and the x-values of their intersections).  If you then cut this pair of routes with vertical slices, 
 where each slice is on an intersection for the maximal or minimal route, then the minimum "gap" (or value of S(X)) within each slice will be at one of the two slice borders.  This works because both routes will be straight and unkinked within each slice.  So my code simply crawls through each slice and finds the minimum overall gap this way, between the two routes D(X) and U(X).  
 
 I could only find the minimal and maximal routes in O(N^2) time, which means my solution is O(N^2).  Although all lines were ordered by 
