@@ -7,6 +7,9 @@ public class main {
 
     public static void main(String[] args) {
 
+        //Assuming positive multiples only, as LCM would always be 
+        //negative infinity if we included negative multiples
+
         if(args.length == 2) {
 
             x = Integer.parseInt(args[0]);
@@ -16,7 +19,7 @@ public class main {
 
                 System.out.println("Negative Infinity");
 
-            }else if ((x>=0&&y<=0)||(x<=0&&y>=0)){
+            }else if (x>=0&&y<=0||x<=0&&y>=0){
 
                 System.out.println("0");
 
@@ -26,8 +29,6 @@ public class main {
         }
     }
 
-    //Assuming positive multiples only, as LCM would always be negative infinity if we included negative multiples
-    //xcount and ycount would always begin on 2, x and y are the inputs
     private static void LCM(int xcounter, int ycounter){
 
         if(x*xcounter<y*ycounter){
