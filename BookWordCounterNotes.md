@@ -10,7 +10,7 @@ My impulse was to use a HashSet, as this would have O(n) look-up time (worst-cas
 However instead I used a tree of SortedSets.  I believed that the look-up time and insertion time would be constant (O(1)) in the worst-case.  Also if I used
 each node to represent a letter, and words read down the tree starting from just below the root, then words that started with other words would share memory space. 
 
-Each node in the tree represented a letter, and had a count.  If a node was the last letter of a word then it's count reflected how often it was used in the book.
+Each node in the tree represented a letter, and had a count.  If a node was the last letter of a word then its count reflected how often it was used in the book.
 
 The average height of the tree would be the average length of a word in the book.  The time to find the next node for a given node is also going to be, at worst, log(26) (as SortedSets themselves use a binary tree structure), therefore time to look up and insert items was constant.
 
