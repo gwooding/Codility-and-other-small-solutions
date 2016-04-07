@@ -1,0 +1,6 @@
+c:\users\george wooding\documents\visual studio 2015\Projects\BlockingCollectionProducerConsumer\BlockingCollectionProducerConsumer\bin\Debug\BlockingCollectionProducerConsumer.exe.config
+c:\users\george wooding\documents\visual studio 2015\Projects\BlockingCollectionProducerConsumer\BlockingCollectionProducerConsumer\obj\Debug\BlockingCollectionProducerConsumer.csprojResolveAssemblyReference.cache
+c:\users\george wooding\documents\visual studio 2015\Projects\BlockingCollectionProducerConsumer\BlockingCollectionProducerConsumer\bin\Debug\BlockingCollectionProducerConsumer.exe
+c:\users\george wooding\documents\visual studio 2015\Projects\BlockingCollectionProducerConsumer\BlockingCollectionProducerConsumer\bin\Debug\BlockingCollectionProducerConsumer.pdb
+c:\users\george wooding\documents\visual studio 2015\Projects\BlockingCollectionProducerConsumer\BlockingCollectionProducerConsumer\obj\Debug\BlockingCollectionProducerConsumer.exe
+c:\users\george wooding\documents\visual studio 2015\Projects\BlockingCollectionProducerConsumer\BlockingCollectionProducerConsumer\obj\Debug\BlockingCollectionProducerConsumer.pdb
