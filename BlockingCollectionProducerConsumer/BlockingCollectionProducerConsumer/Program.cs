@@ -8,17 +8,17 @@ namespace BlockingCollectionProducerConsumer
     {
         public static void Main()
         {
-            var consumer = ParallelTaskConsumer.StartNew(10, Console.WriteLine);
+            var consumerGrid = ParallelTaskConsumer.StartUp(10, Console.WriteLine);
 
             Task.Factory.StartNew(() =>
             {
                 for (int i = 0; i < 14; i++)
                 {
                     int j = i;
-                    consumer.EnqueueTask(new Task(() => Console.WriteLine(j)));
+                    consumerGrid.Add(new Task(() => Console.WriteLine(j)));
                 }
 
-                consumer.Dispose();
+                consumerGrid.Dispose();
             });
 
             Console.ReadLine();
