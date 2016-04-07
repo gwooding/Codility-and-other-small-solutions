@@ -1,0 +1,5 @@
+c:\users\george wooding\documents\visual studio 2015\Projects\ProducerConsumer\ProducerConsumer\bin\Debug\ProducerConsumer.exe.config
+c:\users\george wooding\documents\visual studio 2015\Projects\ProducerConsumer\ProducerConsumer\bin\Debug\ProducerConsumer.exe
+c:\users\george wooding\documents\visual studio 2015\Projects\ProducerConsumer\ProducerConsumer\bin\Debug\ProducerConsumer.pdb
+c:\users\george wooding\documents\visual studio 2015\Projects\ProducerConsumer\ProducerConsumer\obj\Debug\ProducerConsumer.exe
+c:\users\george wooding\documents\visual studio 2015\Projects\ProducerConsumer\ProducerConsumer\obj\Debug\ProducerConsumer.pdb
