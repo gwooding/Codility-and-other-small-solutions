@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
@@ -8,27 +8,27 @@ namespace BlockingCollectionProducerConsumer
 {
     public class ParallelTaskConsumer : IDisposable
     {
-        private ParallelTaskConsumer(Task[] tasks, BlockingCollection<Task> taskQueue, CancellationTokenSource cts, Action<string> logger)
+        private ParallelTaskConsumer(BlockingCollection<Task> queue, Task[] tasks, CancellationTokenSource cts, Action<string> logger)
         {
-            _taskQueue = taskQueue;
+            _queue = queue;
             _tasks = tasks;
-            _cts = cts;
+            _cancellationTokenSource = cts;
             _logger = logger;
         }
 
-        private readonly BlockingCollection<Task> _taskQueue;
+        private readonly BlockingCollection<Task> _queue;
 
         private bool _isDisposed;
 
         private readonly Action<string> _logger;
 
-        private readonly CancellationTokenSource _cts;
+        private readonly CancellationTokenSource _cancellationTokenSource;
 
         private readonly Task[] _tasks;
 
-        public static ParallelTaskConsumer StartNew(int parallelism, Action<string> logger)
+        public static ParallelTaskConsumer StartUp(int width, Action<string> logger)
         {
-            if (parallelism < 1)
+            if (width < 1)
             {
                 logger("Surely you want at least one taskrunner?");
                 return null; ;
@@ -36,23 +36,23 @@ namespace BlockingCollectionProducerConsumer
 
             var cts = new CancellationTokenSource();
 
-            var taskQueue = new BlockingCollection<Task>(new ConcurrentQueue<Task>());
+            var queue = new BlockingCollection<Task>(new ConcurrentQueue<Task>());
 
             var tasks = Enumerable.Range(0, parallelism)
                 .Select(
                 x =>
-                Task.Factory.StartNew(() => Consume(cts.Token, taskQueue, logger), TaskCreationOptions.LongRunning))
+                Task.Factory.StartNew(() => Consume(cts.Token, queue, logger), TaskCreationOptions.LongRunning))
                 .ToArray();
 
-            return new ParallelTaskConsumer(tasks, taskQueue, cts, logger);
+            return new ParallelTaskConsumer(tasks, queue, cts, logger);
         }
 
-        public void EnqueueTask(Task task)
+        public void AddTask(Task task)
         {
             _taskQueue.Add(task);
         }
 
-        private static void Consume(CancellationToken token, BlockingCollection<Task> taskQueue, Action<string> logger)
+        private static void Consume(CancellationToken token, BlockingCollection<Task> queue, Action<string> logger)
         {
             while (true)
             {
@@ -61,7 +61,7 @@ namespace BlockingCollectionProducerConsumer
                     Task item;
                     try
                     {
-                        item = taskQueue.Take(token);
+                        item = queue.Take(token);
                     }
                     catch (OperationCanceledException)
                     {
@@ -82,8 +82,8 @@ namespace BlockingCollectionProducerConsumer
             {
                 return;
             }
-            _taskQueue.CompleteAdding();
-            _cts.Cancel();
+            _queue.CompleteAdding();
+            _cancellationTokenSource.Cancel();
 
             Task.WaitAll(_tasks);
 
@@ -98,7 +98,7 @@ namespace BlockingCollectionProducerConsumer
                     _logger(string.Format(ex.Message));
                 }
             }
-            _taskQueue.Dispose();
+            _queue.Dispose();
             _isDisposed = true;
         }
     }
