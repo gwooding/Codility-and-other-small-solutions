@@ -8,6 +8,16 @@ namespace BlockingCollectionProducerConsumer
 {
     public class ParallelTaskConsumer : IDisposable
     {
+        private readonly BlockingCollection<Task> _queue;
+        
+        private readonly Task[] _tasks;
+
+        private bool _isDisposed;
+        
+        private readonly CancellationTokenSource _cancellationTokenSource;
+
+        private readonly Action<string> _logger;
+        
         private ParallelTaskConsumer(BlockingCollection<Task> queue, Task[] tasks, CancellationTokenSource cts, Action<string> logger)
         {
             _queue = queue;
@@ -15,16 +25,6 @@ namespace BlockingCollectionProducerConsumer
             _cancellationTokenSource = cts;
             _logger = logger;
         }
-
-        private readonly BlockingCollection<Task> _queue;
-
-        private bool _isDisposed;
-
-        private readonly Action<string> _logger;
-
-        private readonly CancellationTokenSource _cancellationTokenSource;
-
-        private readonly Task[] _tasks;
 
         public static ParallelTaskConsumer StartUp(int width, Action<string> logger)
         {
@@ -44,12 +44,7 @@ namespace BlockingCollectionProducerConsumer
                 Task.Factory.StartNew(() => Consume(cts.Token, queue, logger), TaskCreationOptions.LongRunning))
                 .ToArray();
 
-            return new ParallelTaskConsumer(tasks, queue, cts, logger);
-        }
-
-        public void AddTask(Task task)
-        {
-            _taskQueue.Add(task);
+            return new ParallelTaskConsumer(queue, tasks, cts, logger);
         }
 
         private static void Consume(CancellationToken token, BlockingCollection<Task> queue, Action<string> logger)
@@ -58,22 +53,27 @@ namespace BlockingCollectionProducerConsumer
             {
                 try
                 {
-                    Task item;
+                    Task task;
                     try
                     {
-                        item = queue.Take(token);
+                        task = queue.Take(token);
                     }
                     catch (OperationCanceledException)
                     {
                         break;
                     }
-                    item.Start();
+                    task.Start();
                 }
                 catch (Exception ex)
                 {
                     logger(string.Format(ex.Message));
                 }
             }
+        }
+        
+        public void AddTask(Task task)
+        {
+            _queue.Add(task);
         }
 
         public void Dispose()
