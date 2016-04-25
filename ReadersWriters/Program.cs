@@ -8,21 +8,21 @@ namespace ReadersWriters
 {
     class Program
     {
-        static BlockingCollection<Action> readerActionQueue = new BlockingCollection<Action>(new ConcurrentQueue<Action>());
-        static BlockingCollection<Action> writerActionQueue = new BlockingCollection<Action>(new ConcurrentQueue<Action>());
+        static BlockingCollection<Action> ReaderActionQueue = new BlockingCollection<Action>(new ConcurrentQueue<Action>());
+        static BlockingCollection<Action> WriterActionQueue = new BlockingCollection<Action>(new ConcurrentQueue<Action>());
 
-        static StringBuilder  word = new StringBuilder("");
+        static StringBuilder  Word = new StringBuilder("");
 
-        static bool writeReady;
+        static bool WriteReady;
 
-        static bool readStopped;
+        static bool ReadStopped;
 
-        static List<Task[]> taskCollectionList = new List<Task[]>();
+        static List<Task[]> TaskCollectionList = new List<Task[]>();
         
         static void Main(string[] args)
         {
-            Task.Run(() => enQueueReader());
-            Task.Run(() => enQueueWriter());
+            Task.Run(() => EnqueueReader());
+            Task.Run(() => EnqueueWriter());
             Task.Run(() => ReadersConsume(5));
             Task.Run(() => WritersConsume());
             Console.ReadLine();
@@ -32,29 +32,29 @@ namespace ReadersWriters
         {
             while (true)
             {
-                if (!readStopped)
+                if (!ReadStopped)
                 {
                     Task[] tasks = new Task[readerParallelismWidth];
                     for (int i = 0; i < tasks.Length; i++)
                     {
                         tasks[i] = Task.Run(() => {
                             Action action;
-                            bool actionAvailable = readerActionQueue.TryTake(out action);
+                            bool actionAvailable = ReaderActionQueue.TryTake(out action);
                             if (actionAvailable)
                             {
                                 action();
                             }
                         });
                     }
-                    taskCollectionList.Add(tasks);
+                    TaskCollectionList.Add(tasks);
 
-                    if (writeReady)
+                    if (WriteReady)
                     {
-                        foreach(var taskList in taskCollectionList)
+                        foreach(var taskArray in TaskCollectionList)
                         {
-                            Task.WaitAll(taskList);
+                            Task.WaitAll(taskArray);
                         }
-                        readStopped = true;
+                        ReadStopped = true;
                     }
                 }
             }
@@ -65,38 +65,38 @@ namespace ReadersWriters
             while (true)
             {
                 Action action;
-                if (writerActionQueue.Count > 0)
+                if (WriterActionQueue.Count > 0)
                 {
-                    writeReady = true;
-                    if (readStopped)
+                    WriteReady = true;
+                    if (ReadStopped)
                     {
-                        if(writerActionQueue.TryTake(out action))
+                        if(WriterActionQueue.TryTake(out action))
                         {
                             action();
                         }
-                        readStopped = false;
-                        writeReady = false;
+                        ReadStopped = false;
+                        WriteReady = false;
                     }
                 }
             }
         }
 
-        static void enQueueReader()
+        static void EnqueueReader()
         {
             int j = 0;
             while (j < 1000)
             {
-                readerActionQueue.Add(() => Console.WriteLine(word.ToString()));
+                ReaderActionQueue.Add(() => Console.WriteLine(Word.ToString()));
                 j++;
             }
         }
 
-        static void enQueueWriter()
+        static void EnqueueWriter()
         {
             int j = 0;
             while (j < 1000)
             {
-                writerActionQueue.Add(() => { word.Append('a'); Console.WriteLine("WRITE"); });
+                WriterActionQueue.Add(() => { Word.Append('a'); Console.WriteLine("WRITE"); });
                 j++;
             }
         }
